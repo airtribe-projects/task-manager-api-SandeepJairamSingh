@@ -1,4 +1,4 @@
-# Task Scheduler API
+# Task Manager API
 
 ## Overview
 This is a simple **Task Management API** built with **Node.js and Express.js**, using **in-memory storage**. The API allows users to:
@@ -15,13 +15,13 @@ This is a simple **Task Management API** built with **Node.js and Express.js**, 
 ```sh
 # Clone this repository
 git clone https://github.com/airtribe-projects/airtribe-engineering-learners-task-manager-api-task-manager.git
-cd task-scheduler-api
+cd task-manager-api
 
 # Install dependencies
 npm install
 
 # Start the server
-npm start
+npm run start
 ```
 
 - The API will be available at:
@@ -147,4 +147,24 @@ http://localhost:3000
     "createdAt": "2024-03-04T13:00:00Z"
   }
 ]
+```
+
+## Testing the API
+
+### Using Postman or cURL:
+
+**Example: Create a Task using cURL**
+
+```sh
+curl -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{
+  "title": "Write documentation",
+  "description": "Complete the README file",
+  "priority": "medium"
+}'
+```
+
+**Example: Get All Tasks using cURL**
+
+```sh
+curl -X GET http://localhost:3000/tasks
 ```
