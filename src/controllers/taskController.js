@@ -3,7 +3,9 @@
 const taskService = require("../services/taskService");
 
 function GetAllTask(req, res){
-    const tasks = taskService.GetAllTasks();
+    const { completed, sort } = req.query;
+    const filterCompleted = completed !== undefined ? completed === "true" : undefined;
+    const tasks = taskService.GetAllTasks(filterCompleted, sort);
     return res.json(tasks);
 }
 
@@ -17,8 +19,8 @@ function GetTaskById(req, res){
 }
 
 function CreateTask(req, res){
-    const {title, description} = req.body;
-    const newTask = taskService.CreateTask(title, description);
+    const {title, description, priority } = req.body;
+    const newTask = taskService.CreateTask(title, description, priority);
 
     return res.status(201).json(newTask);
 }
@@ -40,10 +42,23 @@ function DeleteTask(req, res){
     return res.json({ message: "Task deleted successfully" });
 }
 
+function GetTasksByPriority(req, res){
+    const { level } = req.params;
+    const validPriorities = ["low", "medium", "high"];
+
+    if (!validPriorities.includes(level)) {
+        return res.status(400).json({ error: "Invalid priority level. Use 'low', 'medium', or 'high'." });
+    }
+
+    const tasks = taskService.GetTaskByPriority(level);
+    res.json(tasks);
+};
+
 module.exports = {
     GetAllTask,
     GetTaskById,
     CreateTask,
     UpdateTask,
-    DeleteTask
+    DeleteTask,
+    GetTasksByPriority
 }

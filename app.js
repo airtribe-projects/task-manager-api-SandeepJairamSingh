@@ -10,8 +10,6 @@ app.use(express.urlencoded({ extended: true }));
 //routes
 app.use("/tasks", tasksRoutes);
 
-//error handling middleware
-
 
 app.listen(port, (err) => {
     if (err) {
@@ -19,7 +17,3 @@ app.listen(port, (err) => {
     }
     console.log(`Server is listening on ${port}`);
 });
-
-
-
-//module.exports = app;

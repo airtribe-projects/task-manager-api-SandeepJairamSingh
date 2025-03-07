@@ -6,12 +6,26 @@ let id = 1;
   "id": 2,
   "title": "Create a new project",
   "description": "Create a new project using Magic",
-  "completed": false
+  "completed": false,
+  "priority": priority,
+  "createdAt": Date
 }
 */
 
-function GetAllTasks(){
-    return tasks;
+function GetAllTasks(filterCompleted, sort){
+    let result = [...tasks];
+
+    if (filterCompleted !== undefined) {
+        result = result.filter(task => task.completed === filterCompleted);
+    }
+
+    if (sort === "asc") {
+        result.sort((a, b) => a.createdAt - b.createdAt);
+    } else if (sort === "desc") {
+        result.sort((a, b) => b.createdAt - a.createdAt);
+    }
+
+    return result;
 };
 
 function GetTaskById(taskId){
@@ -21,33 +35,30 @@ function GetTaskById(taskId){
     return tasks.find(task => task.id === parseInt(taskId));
 };
 
-function CreateTask(title, description){
+function CreateTask(title, description, priority){
     const newTask = {
         id: id++,
         title: title,
         description: description,
-        completed: false
+        completed: false,
+        priority: priority || "medium",
+        createdAt: new Date()
     }
 
     tasks.push(newTask);
     return newTask;
 };
 
-function UpdateTask(taskId, updateTask){
+function UpdateTask(taskId, updates){
+    const task = tasks.find(task => task.id === parseInt(taskId));
+    if (!task) return null;
 
-    if(!taskId)
-        return null;
+    task.title = updates.title || task.title;
+    task.description = updates.description || task.description;
+    task.completed = updates.completed !== undefined ? updates.completed : task.completed;
+    task.priority = updates.priority || task.priority;
 
-    const existingTask = tasks.find(task => task.id === parseInt(taskId));
-
-    if(!existingTask)
-        return null;
-
-    existingTask.title = updateTask.title || existingTask.title;
-    existingTask.description = updateTask.description || existingTask.description;
-    existingTask.completed = updateTask.completed !== undefined ? updateTask.completed : existingTask.completed;
-
-    return existingTask;
+    return task;
 };
 
 function DeleteTask(taskId){
@@ -60,10 +71,15 @@ function DeleteTask(taskId){
     return true;
 };
 
+function GetTaskByPriority(priority){
+    return tasks.filter(task => task.priority === priority);
+}
+
 module.exports = {
     GetAllTasks,
     GetTaskById,
     CreateTask,
     UpdateTask,
-    DeleteTask
+    DeleteTask,
+    GetTaskByPriority
 }
